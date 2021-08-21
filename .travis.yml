@@ -1,0 +1,24 @@
+sudo: required
+services: 
+  - docker
+before_install:
+  - docker build -t nimcurry/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run nimcurry/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t nimcurry/multi-client ./client
+  - docker build -t nimcurry/multi-nginx ./nginx
+  - docker build -t nimcurry/multi-server ./server
+  - docker build -t nimcurry/multi-worker ./worker
+
+#login to docker ci
+
+  - echo "$DOCKER_PASSWORD" | docker login - u "$DOCKER_ID" --password-stdin
+
+#take images and push them to docker hub
+  - docker push nimcurry/multi-client
+  - docker push nimcurry/multi-nginx
+  - docker push nimcurry/multi-server
+  - docker push nimcurry/multi-worker

@@ -15,7 +15,7 @@ after_success:
 
 #login to docker ci
 
-  - echo "$DOCKER_PASSWORD" | docker login - u "$DOCKER_ID" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
 #take images and push them to docker hub
   - docker push nimcurry/multi-client
